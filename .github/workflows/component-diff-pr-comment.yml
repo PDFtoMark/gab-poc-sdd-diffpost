@@ -1,0 +1,23 @@
+name: Component Schema Diff Generate
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+permissions:
+  contents: read
+jobs:
+  component-diff-generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Save report for comment workflow
+        run: |
+          mkdir -p /tmp/artifact
+          echo "1" > /tmp/artifact/pr-number.txt
+          echo "true" > /tmp/artifact/diff-generated.txt
+          printf '%s\n' "aGVsbG8=" > /tmp/artifact/diff-content.txt
+      - name: Upload diff artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: component-diff-report
+          path: /tmp/artifact
+          retention-days: 1
